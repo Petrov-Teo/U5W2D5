@@ -50,10 +50,11 @@ public class DipendenteService {
         this.dipendenteRepository.delete(found);
     }
 
-    public Dipendente findAndUpdite(UUID idDipendente, DipendenteDto body) throws BadRequestException {
+    public Dipendente findAndUpdate(UUID idDipendente, DipendenteDto body) throws BadRequestException {
         if (this.dipendenteRepository.findByEmail(body.email()).isPresent()) {
             throw new BadRequestException("L'email: " + body.email() + " è già in uso!");
         }
+
         Dipendente found = this.findById(idDipendente);
         found.setNome(body.nome());
         found.setCognome(body.cognome());

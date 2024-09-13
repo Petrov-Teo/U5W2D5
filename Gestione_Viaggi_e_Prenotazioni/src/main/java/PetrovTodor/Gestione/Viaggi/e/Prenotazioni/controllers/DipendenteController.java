@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /*
@@ -49,10 +50,29 @@ public class DipendenteController {
                     .collect(Collectors.joining(". "));
             throw new BadRequestException("Controlla i seguenti errori: " + messages);
         } else {
-            return new DipendenteResponseDto(this.dipendenteService.saveDipendente(body).getIdDiprndente());
+            return new DipendenteResponseDto(this.dipendenteService.saveDipendente(body).getIdDipendente());
         }
     }
+
     //3. GET  http://localhost:3001/dipendenti/{autoreId}
+    @GetMapping("{idDipendente}")
+    public Dipendente findById(@PathVariable UUID idDipendente) {
+        return this.dipendenteService.findById(idDipendente);
+    }
+
+    //4. PUT http://localhost:3001/dipendenti/{autoreId}
+    @PutMapping("{idDipendente}")
+    public Dipendente findByIdAndUpdite(@PathVariable UUID idDipendente, @RequestParam DipendenteDto body) throws org.apache.coyote.BadRequestException {
+
+        return this.dipendenteService.findAndUpdate(idDipendente, body);
+    }
+
+    // 5. DELETE http://localhost:3001/dipendenti/{autoreId}
+    @DeleteMapping("{idDipendente}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDipendente(UUID idDipendente) {
+        dipendenteService.findAndDelete(idDipendente);
+    }
 
 
 }

@@ -24,8 +24,9 @@ public class Viaggio {
     private StatoViaggio stato;
 
     @ManyToOne
-    @JoinColumn(name = "idDipendente", nullable = false)
+    @JoinColumn(name = "dipendente_id")
     private Dipendente dipendente;
+
 
     public Viaggio(String destinazione, LocalDate data, Dipendente dipendente) {
         this.destinazione = destinazione;

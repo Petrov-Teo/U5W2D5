@@ -1,6 +1,7 @@
 package PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions;
 
-import PetrovTodor.Validation_Images_Upload_E_Emails.payload.ErrorsPayloadRecord;
+
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.ErrorsPayloadRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,9 +11,9 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
-    @ExceptionHandler(BadRequestExeption.class)
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)//Err 400
-    public ErrorsPayloadRecord handleBadRequest(BadRequestExeption ex) {
+    public ErrorsPayloadRecord handleBadRequest(BadRequestException ex) {
         return new ErrorsPayloadRecord(ex.getMessage(), LocalDateTime.now());
     }
 

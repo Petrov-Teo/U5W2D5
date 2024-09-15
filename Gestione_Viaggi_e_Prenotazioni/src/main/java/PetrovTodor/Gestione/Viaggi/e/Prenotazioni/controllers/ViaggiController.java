@@ -1,6 +1,5 @@
 package PetrovTodor.Gestione.Viaggi.e.Prenotazioni.controllers;
 
-import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Dipendente;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Viaggio;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.enums.StatoViaggio;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.BadRequestException;
@@ -71,12 +70,6 @@ public class ViaggiController {
     @PatchMapping("/SetStato/{idViaggio}")
     public Viaggio updateViaggioStato(@PathVariable UUID idViaggio, @RequestBody StatoViaggio nuovoStato) {
         return viaggioService.setStato(idViaggio, nuovoStato);
-    }
-
-    //4.a PATCH http://localhost:3001/dipendente/{viaggioId}
-    @PatchMapping("/SetDipendente/{idViaggio}")
-    public Viaggio updateViaggioDipendente(@PathVariable UUID idViaggio, @RequestBody Dipendente dipendente) {
-        return viaggioService.setDipendente(idViaggio, dipendente);
     }
 
     // 5. DELETE http://localhost:3001/viaggi/{viaggioId}

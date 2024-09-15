@@ -25,10 +25,16 @@ public class Prenotazione {
     @ManyToOne
     @JoinColumn(name = "idViaggio", nullable = false)
     private Viaggio viaggio;
+    @ManyToOne
+    @JoinColumn(name = "idDipendente", nullable = false)
+    private Dipendente dipendente;
 
-    public Prenotazione(LocalDate dataPrenotazione, String noteEoPreferenze, Viaggio viaggio) {
+    public Prenotazione(LocalDate dataPrenotazione, String noteEoPreferenze, Viaggio viaggio, Dipendente dipendente) {
         this.dataPrenotazione = dataPrenotazione;
         this.noteEoPreferenze = noteEoPreferenze;
         this.viaggio = viaggio;
+        this.dipendente = dipendente;
     }
+
+
 }

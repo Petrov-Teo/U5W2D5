@@ -32,14 +32,6 @@ public class ViaggioService {
         return viaggioRepository.save(viaggio);
     }
 
-    public Viaggio setDipendente(UUID idViaggio, Dipendente dipendenteId) {
-        Viaggio viaggio = this.viaggioRepository.findById(idViaggio).orElseThrow(() -> new NotFoundException(idViaggio));
-        Dipendente dipendente = this.dipendenteRepository.findById(dipendenteId.getIdDipendente())
-                .orElseThrow(() -> new NotFoundException(dipendenteId.getIdDipendente()));
-        viaggio.setDipendente(dipendente);
-        System.out.println(viaggio);
-        return viaggioRepository.save(viaggio);
-    }
 
     public Viaggio setStato(UUID idViaggio, StatoViaggio nuovoStato) {
         Viaggio viaggio = this.viaggioRepository.findById(idViaggio)

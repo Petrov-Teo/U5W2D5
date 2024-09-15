@@ -33,12 +33,14 @@ public class PrenotazioneController {
     @Autowired
     PrenotazioneService prenotazioneService;
 
-    @GetMapping
     //1. GET http://localhost:3001/prenotzioni
-    public Page<Prenotazione> findAllPrenotazioni(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size,
-                                                  @RequestParam(defaultValue = "idDipendente") String sorteBy) {
-        return this.prenotazioneService.findAll(page, size, sorteBy);
+    @GetMapping
+    public Page<Prenotazione> findAllPrenotazioni(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "idPrenotazione") String sortBy) {
+     
+        return this.prenotazioneService.findAll(page, size, sortBy);
     }
 
     @PostMapping

@@ -1,6 +1,8 @@
 package PetrovTodor.Gestione.Viaggi.e.Prenotazioni.controllers;
 
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Dipendente;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Viaggio;
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.enums.StatoViaggio;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.BadRequestException;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.ViaggioDto;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.responsPayload.ViaggioResponseDto;
@@ -52,26 +54,39 @@ public class ViaggiController {
         }
     }
 
-    //3. GET  http://localhost:3001/viaggi/{autoreId}
-    @GetMapping("/dipendenti/{idViaggio}")
+    //3. GET  http://localhost:3001/viaggi/{viaggioId}
+    @GetMapping("/{idViaggio}")
     public Viaggio findById(@PathVariable UUID idViaggio) {
         return viaggioService.findById(idViaggio);
     }
 
-    //4. PUT http://localhost:3001/viaggi/{autoreId}
-    @PutMapping("/viaggi/{idViaggio}")
+    //4. PUT http://localhost:3001/viaggi/{viaggioId}
+    @PutMapping("/{idViaggio}")
     public Viaggio findByIdAndUpdite(@PathVariable UUID idViaggio, @RequestParam ViaggioDto body) throws org.apache.coyote.BadRequestException {
 
-        return this.viaggioService.findAndUpdite(idViaggio, body);
+        return this.viaggioService.findAndUpdate(idViaggio, body);
     }
 
-    // 5. DELETE http://localhost:3001/viaggi/{autoreId}
-    @DeleteMapping("/viaggi/{idViaggio}")
+    //4.a PATCH http://localhost:3001/viaggi/{viaggioId}
+    @PatchMapping("/SetStato/{idViaggio}")
+    public Viaggio updateViaggioStato(@PathVariable UUID idViaggio, @RequestBody StatoViaggio nuovoStato) {
+        return viaggioService.setStato(idViaggio, nuovoStato);
+    }
+
+    //4.a PATCH http://localhost:3001/dipendente/{viaggioId}
+    @PatchMapping("/SetDipendente/{idViaggio}")
+    public Viaggio updateViaggioDipendente(@PathVariable UUID idViaggio, @RequestBody Dipendente dipendente) {
+        return viaggioService.setDipendente(idViaggio, dipendente);
+    }
+
+    // 5. DELETE http://localhost:3001/viaggi/{viaggioId}
+    @DeleteMapping("/{idViaggio}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDipendente(UUID idDipendente) {
-        viaggioService.findAndDelete(idDipendente);
+    public void deleteDipendente(UUID idViaggio) {
+        viaggioService.findAndDelete(idViaggio);
     }
 }
+
 
 
 

@@ -11,6 +11,5 @@ public record ViaggioDto(
         String destinazione,
         @NotNull(message = "il campo data  obbligatorio!")
         LocalDate data,
-        @NotNull(message = "il campo è  gia messo obbligatorio")
         UUID idDipendente) {
 }

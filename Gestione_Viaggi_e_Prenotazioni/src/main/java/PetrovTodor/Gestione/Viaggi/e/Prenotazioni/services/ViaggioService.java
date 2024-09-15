@@ -2,11 +2,12 @@ package PetrovTodor.Gestione.Viaggi.e.Prenotazioni.services;
 
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Dipendente;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Viaggio;
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.enums.StatoViaggio;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.BadRequestException;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.NotFoundException;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.ViaggioDto;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.repositories.DipendenteRepository;
-import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.repositories.ViaggioRepositoy;
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.repositories.ViaggioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,52 +20,62 @@ import java.util.UUID;
 @Service
 public class ViaggioService {
     @Autowired
-    ViaggioRepositoy viaggioRepositoy;
+    ViaggioRepository viaggioRepository;
+    ;
 
     @Autowired
     DipendenteRepository dipendenteRepository;
 
 
     public Viaggio saveViaggio(ViaggioDto body) {
-        UUID dipendenteId = body.idDipendente();
+        Viaggio viaggio = new Viaggio(body.destinazione(), body.data());
+        return viaggioRepository.save(viaggio);
+    }
 
-        if (this.viaggioRepositoy.countViaggiImpegnativi(dipendenteId, body.data()) > 0) {
-            throw new BadRequestException("Il dipendente non è libero per questo viaggio, perché già impegnato in un altro viaggio!");
+    public Viaggio setDipendente(UUID idViaggio, Dipendente dipendenteId) {
+        Viaggio viaggio = this.viaggioRepository.findById(idViaggio).orElseThrow(() -> new NotFoundException(idViaggio));
+        Dipendente dipendente = this.dipendenteRepository.findById(dipendenteId.getIdDipendente())
+                .orElseThrow(() -> new NotFoundException(dipendenteId.getIdDipendente()));
+        viaggio.setDipendente(dipendente);
+        System.out.println(viaggio);
+        return viaggioRepository.save(viaggio);
+    }
+
+    public Viaggio setStato(UUID idViaggio, StatoViaggio nuovoStato) {
+        Viaggio viaggio = this.viaggioRepository.findById(idViaggio)
+                .orElseThrow(() -> new NotFoundException(idViaggio));
+
+        if (viaggio.getDipendente() == null) {
+            throw new BadRequestException("Non puoi cambiare lo stato, non è stato assegnato nessun dipendente");
         }
-        Dipendente dipendente = this.dipendenteRepository.findById(dipendenteId)
-                .orElseThrow(() -> new NotFoundException(dipendenteId));
-
-
-        return new Viaggio(body.destinazione(), body.data(), dipendente);
+        viaggio.setStato(nuovoStato);
+        return viaggioRepository.save(viaggio);
     }
 
     public Page<Viaggio> findAll(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return this.viaggioRepositoy.findAll(pageable);
+        return this.viaggioRepository.findAll(pageable);
     }
 
     public Viaggio findById(UUID idViaggio) {
-        return this.viaggioRepositoy.findById(idViaggio).orElseThrow(() -> new NotFoundException(idViaggio));
+        return this.viaggioRepository.findById(idViaggio).orElseThrow(() -> new NotFoundException(idViaggio));
     }
 
     public void findAndDelete(UUID idViaggio) {
         Viaggio found = this.findById(idViaggio);
-        this.viaggioRepositoy.delete(found);
+        this.viaggioRepository.delete(found);
     }
 
     public Viaggio findAndUpdate(UUID idViaggio, ViaggioDto body) throws BadRequestException {
         UUID dipendenteId = body.idDipendente();
 
-        if (this.viaggioRepositoy.countViaggiImpegnativi(dipendenteId, body.data()) > 0) {
-            throw new BadRequestException("Il dipendente non è libero per questo viaggio, perché già impegnato in un altro viaggio!");
-        }
         Dipendente dipendente = this.dipendenteRepository.findById(dipendenteId)
                 .orElseThrow(() -> new NotFoundException(dipendenteId));
         Viaggio found = this.findById(idViaggio);
         found.setData(body.data());
         found.setDipendente(dipendente);
         found.setDestinazione(body.destinazione());
-        return this.viaggioRepositoy.save(found);
+        return this.viaggioRepository.save(found);
     }
 }
 

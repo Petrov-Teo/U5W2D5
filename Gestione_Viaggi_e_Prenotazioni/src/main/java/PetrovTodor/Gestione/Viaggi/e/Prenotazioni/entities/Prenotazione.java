@@ -19,7 +19,7 @@ public class Prenotazione {
     @Setter(AccessLevel.NONE)
     private UUID idPrenotazione;
     private LocalDate dataPrenotazione;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String noteEoPreferenze;
 
     @ManyToOne

@@ -3,6 +3,7 @@ package PetrovTodor.Gestione.Viaggi.e.Prenotazioni.controllers;
 
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.entities.Dipendente;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.BadRequestException;
+import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.exceptions.NotFoundException;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.DipendenteDto;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.payload.responsPayload.DipendenteResponseDto;
 import PetrovTodor.Gestione.Viaggi.e.Prenotazioni.services.DipendenteService;
@@ -43,7 +44,7 @@ public class DipendenteController {
     //2. POST http://localhost:3001/dipendenti (+ body)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DipendenteResponseDto saveDipendente(@RequestBody @Validated DipendenteDto body, BindingResult validationResult) throws org.apache.coyote.BadRequestException {
+    public DipendenteResponseDto saveDipendente(@RequestBody @Validated DipendenteDto body, BindingResult validationResult) throws NotFoundException, org.apache.coyote.BadRequestException {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage())
@@ -62,7 +63,7 @@ public class DipendenteController {
 
     //4. PUT http://localhost:3001/dipendenti/{autoreId}
     @PutMapping("{idDipendente}")
-    public Dipendente findByIdAndUpdite(@PathVariable UUID idDipendente, @RequestParam DipendenteDto body) throws org.apache.coyote.BadRequestException {
+    public Dipendente findByIdAndUpdite(@PathVariable UUID idDipendente, @RequestParam DipendenteDto body) throws BadRequestException, org.apache.coyote.BadRequestException {
 
         return this.dipendenteService.findAndUpdate(idDipendente, body);
     }
@@ -70,7 +71,7 @@ public class DipendenteController {
     // 5. DELETE http://localhost:3001/dipendenti/{autoreId}
     @DeleteMapping("{idDipendente}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDipendente(UUID idDipendente) {
+    public void deleteDipendente(@PathVariable UUID idDipendente) {
         dipendenteService.findAndDelete(idDipendente);
     }
 

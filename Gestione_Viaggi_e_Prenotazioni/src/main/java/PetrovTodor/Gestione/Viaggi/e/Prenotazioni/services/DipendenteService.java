@@ -31,6 +31,7 @@ public class DipendenteService {
                 body.cognome(),
                 body.email(),
                 "https://picsum.photos/200/300"
+
         );
 
         return this.dipendenteRepository.save(dipendente);
